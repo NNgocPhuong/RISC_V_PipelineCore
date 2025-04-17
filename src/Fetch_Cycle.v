@@ -18,13 +18,16 @@ module fetch_cycle(clk, rst, PCSrcE, PCTargetE, InstrD, PCD, PCPlus4D);
 
     // Initiation of Modules
     // Declare PC Mux
+    // Chọn giữa PC + 4 và PCTargetE dựa trên tín hiệu PCSrcE.
+    // Nếu reset (rst = 0), giá trị sẽ là 0.
     Mux PC_MUX (.a(PCPlus4F),
-                .b(PCTargetE),
-                .s(PCSrcE),
+                .b(PCTargetE), 
+                .s(PCSrcE), 
                 .c(PC_F)
                 );
 
     // Declare PC Counter
+    // Lưu trữ giá trị PC hiện tại và cập nhật nó theo tín hiệu clock.
     PC_Module Program_Counter (
                 .clk(clk),
                 .rst(rst),
@@ -33,6 +36,8 @@ module fetch_cycle(clk, rst, PCSrcE, PCTargetE, InstrD, PCD, PCPlus4D);
                 );
 
     // Declare Instruction Memory
+    // Lấy lệnh từ bộ nhớ theo địa chỉ PC.
+    // Nếu reset (rst = 0), lệnh sẽ là 0.
     Instruction_Memory IMEM (
                 .rst(rst),
                 .A(PCF),
@@ -40,6 +45,8 @@ module fetch_cycle(clk, rst, PCSrcE, PCTargetE, InstrD, PCD, PCPlus4D);
                 );
 
     // Declare PC adder
+    // Tính toán giá trị PC + 4 để sử dụng trong giai đoạn tiếp theo.
+    // Nếu reset (rst = 0), giá trị sẽ là 0.
     PC_Adder PC_adder (
                 .a(PCF),
                 .b(32'h00000004),
