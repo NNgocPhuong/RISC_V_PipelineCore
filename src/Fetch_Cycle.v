@@ -1,19 +1,19 @@
 module fetch_cycle(clk, rst, PCSrcE, PCTargetE, InstrD, PCD, PCPlus4D);
 
     // Declare input & outputs
-    input clk, rst;
-    input PCSrcE;
-    input [31:0] PCTargetE;
-    output [31:0] InstrD;
-    output [31:0] PCD, PCPlus4D;
+    input clk, rst;                // Tín hiệu clock và reset.
+    input PCSrcE;                  // Tín hiệu chọn nguồn địa chỉ PC (PC + 4 hoặc PCTargetE).
+    input [31:0] PCTargetE;        // Địa chỉ mục tiêu (target address) từ giai đoạn EXE.
+    output [31:0] InstrD;          // Lệnh được lấy từ bộ nhớ (đầu ra).
+    output [31:0] PCD, PCPlus4D;   // Giá trị PC và PC + 4 được truyền sang giai đoạn Decode.
 
     // Declaring interim wires
-    wire [31:0] PC_F, PCF, PCPlus4F;
-    wire [31:0] InstrF;
+    wire [31:0] PC_F, PCF, PCPlus4F;  // Các tín hiệu liên quan đến PC.
+    wire [31:0] InstrF;               // Lệnh được đọc từ bộ nhớ lệnh.
 
     // Declaration of Register
-    reg [31:0] InstrF_reg;
-    reg [31:0] PCF_reg, PCPlus4F_reg;
+    reg [31:0] InstrF_reg;            // Thanh ghi lưu lệnh.
+    reg [31:0] PCF_reg, PCPlus4F_reg; // Thanh ghi lưu giá trị PC và PC + 4.
 
 
     // Initiation of Modules

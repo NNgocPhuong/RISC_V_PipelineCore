@@ -64,39 +64,41 @@ module decode_cycle(clk, rst, InstrD, PCD, PCPlus4D, RegWriteW, RDW, ResultW, Re
 
     // Declaring Register Logic
     always @(posedge clk or negedge rst) begin
-        if(rst == 1'b0) begin
-            RegWriteD_r <= 1'b0;
-            ALUSrcD_r <= 1'b0;
-            MemWriteD_r <= 1'b0;
-            ResultSrcD_r <= 1'b0;
-            BranchD_r <= 1'b0;
-            ALUControlD_r <= 3'b000;
-            RD1_D_r <= 32'h00000000; 
-            RD2_D_r <= 32'h00000000; 
-            Imm_Ext_D_r <= 32'h00000000;
-            RD_D_r <= 5'h00;
-            PCD_r <= 32'h00000000; 
-            PCPlus4D_r <= 32'h00000000;
-            RS1_D_r <= 5'h00;
-            RS2_D_r <= 5'h00;
-        end
-        else begin
-            RegWriteD_r <= RegWriteD;
-            ALUSrcD_r <= ALUSrcD;
-            MemWriteD_r <= MemWriteD;
-            ResultSrcD_r <= ResultSrcD;
-            BranchD_r <= BranchD;
-            ALUControlD_r <= ALUControlD;
-            RD1_D_r <= RD1_D; 
-            RD2_D_r <= RD2_D; 
-            Imm_Ext_D_r <= Imm_Ext_D;
-            RD_D_r <= InstrD[11:7];
-            PCD_r <= PCD; 
-            PCPlus4D_r <= PCPlus4D;
-            RS1_D_r <= InstrD[19:15];
-            RS2_D_r <= InstrD[24:20];
-        end
+    if(rst == 1'b0) begin
+        // Reset các thanh ghi
+        RegWriteD_r <= 1'b0;
+        ALUSrcD_r <= 1'b0;
+        MemWriteD_r <= 1'b0;
+        ResultSrcD_r <= 1'b0;
+        BranchD_r <= 1'b0;
+        ALUControlD_r <= 3'b000;
+        RD1_D_r <= 32'h00000000; 
+        RD2_D_r <= 32'h00000000; 
+        Imm_Ext_D_r <= 32'h00000000;
+        RD_D_r <= 5'h00;
+        PCD_r <= 32'h00000000; 
+        PCPlus4D_r <= 32'h00000000;
+        RS1_D_r <= 5'h00;
+        RS2_D_r <= 5'h00;
     end
+    else begin
+        // Lưu giá trị vào thanh ghi
+        RegWriteD_r <= RegWriteD;
+        ALUSrcD_r <= ALUSrcD;
+        MemWriteD_r <= MemWriteD;
+        ResultSrcD_r <= ResultSrcD;
+        BranchD_r <= BranchD;
+        ALUControlD_r <= ALUControlD;
+        RD1_D_r <= RD1_D; 
+        RD2_D_r <= RD2_D; 
+        Imm_Ext_D_r <= Imm_Ext_D;
+        RD_D_r <= InstrD[11:7];
+        PCD_r <= PCD; 
+        PCPlus4D_r <= PCPlus4D;
+        RS1_D_r <= InstrD[19:15];
+        RS2_D_r <= InstrD[24:20];
+    end
+end
 
     // Output asssign statements
     assign RegWriteE = RegWriteD_r;
