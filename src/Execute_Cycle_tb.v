@@ -6,8 +6,6 @@ module Execute_Cycle_tb();
     reg [31:0] RD1_E, RD2_E, Imm_Ext_E;
     reg [4:0] RD_E;
     reg [31:0] PCE, PCPlus4E;
-    reg [31:0] ResultW;
-    reg [1:0] ForwardA_E, ForwardB_E;
 
     // Khai báo output
     wire PCSrcE, RegWriteM, MemWriteM, ResultSrcM;
@@ -39,10 +37,7 @@ module Execute_Cycle_tb();
         .RD_M(RD_M),
         .PCPlus4M(PCPlus4M),
         .WriteDataM(WriteDataM),
-        .ALU_ResultM(ALU_ResultM),
-        .ResultW(ResultW),
-        .ForwardA_E(ForwardA_E),
-        .ForwardB_E(ForwardB_E)
+        .ALU_ResultM(ALU_ResultM)
     );
 
     // Tạo xung clock
@@ -69,14 +64,11 @@ module Execute_Cycle_tb();
         RD_E = 5'h0;
         PCE = 32'h0;
         PCPlus4E = 32'h0;
-        ResultW = 32'h0;
-        ForwardA_E = 2'b00;
-        ForwardB_E = 2'b00;
 
         // Đợi 10ns và giải phóng reset
         #10 rst = 1;
 
-        // Test case 1: Phép cộng cơ bản
+        // Test case 1: Phép cộng cơ bản (R-type)
         #10;
         RD1_E = 32'h00000005;    // Số thứ nhất: 5
         RD2_E = 32'h00000003;    // Số thứ hai: 3
@@ -84,24 +76,15 @@ module Execute_Cycle_tb();
         ALUSrcE = 0;             // Sử dụng RD2_E
         RegWriteE = 1;           // Cho phép ghi vào register
         
-        // Test case 2: Phép cộng với immediate
+        // Test case 2: Phép cộng với immediate (I-type)
         #10;
         RD1_E = 32'h00000005;    // Số thứ nhất: 5
-        Imm_Ext_E = 32'h00000003; // Immediate: 3
+        Imm_Ext_E = 32'h00000004; // Immediate: 4
         ALUControlE = 3'b000;    // Phép cộng
         ALUSrcE = 1;             // Sử dụng immediate
         
-        // Test case 3: Kiểm tra forwarding
+        // Test case 3: Kiểm tra branch (beq)
         #10;
-        ForwardA_E = 2'b10;      // Forward từ Memory stage
-        RD1_E = 32'h00000008;    // Giá trị gốc
-        RD2_E = 32'h00000002;    // Số thứ hai
-        ResultW = 32'h0000000A;  // Giá trị forward từ WriteBack
-        ALUSrcE = 0;             // Sử dụng RD2_E
-        
-        // Test case 4: Kiểm tra branch
-        #10;
-        ForwardA_E = 2'b00;      // Tắt forwarding
         RD1_E = 32'h00000005;
         RD2_E = 32'h00000005;    // Giá trị bằng nhau
         BranchE = 1;             // Kích hoạt branch
@@ -109,7 +92,7 @@ module Execute_Cycle_tb();
         PCE = 32'h00000100;      // PC hiện tại
         Imm_Ext_E = 32'h00000010; // Offset
 
-        // Test case 5: Kiểm tra AND operation
+        // Test case 4: Kiểm tra AND operation
         #10;
         BranchE = 0;
         ALUControlE = 3'b010;    // AND operation
@@ -117,7 +100,7 @@ module Execute_Cycle_tb();
         RD2_E = 32'hFF00FF00;
         ALUSrcE = 0;
 
-        // Test case 6: Kiểm tra OR operation
+        // Test case 5: Kiểm tra OR operation
         #10;
         ALUControlE = 3'b011;    // OR operation
         RD1_E = 32'hF0F0F0F0;
